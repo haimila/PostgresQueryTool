@@ -33,18 +33,16 @@ def describe_column():
         if con is not None:
             con.close()
 
-def get_certificates():
+def get_person():
     con = None
     try:
         con = psycopg2.connect(**config())
         cursor = con.cursor()
-        q1 = "SELECT column_name FROM information_schema.columns WHERE table_name = 'certificates' "
-        q2 = "SELECT * FROM certificates"
-        cursor.execute(q1)
-        row1 = cursor.fetchall()
+        q2 = "SELECT * FROM person"
         cursor.execute(q2)
         row2 = cursor.fetchall()
-        print(row1)
+        description = cursor.description
+        print(description)
         print(row2)
         cursor.close()
     except (Exception, psycopg2.DatabaseError) as error:
@@ -53,7 +51,7 @@ def get_certificates():
         if con is not None:
             con.close()
 
-def get_certificates2():
+def get_certificates():
     con = None
     try:
         con = psycopg2.connect(**config())
@@ -110,6 +108,24 @@ def insert_certificate_row(nimi,personiidee):
     finally:
         if con is not None:
             con.close()
+
+def insert_person_row(nimi,ikä,student=False):
+    con = None
+    try:
+        con = psycopg2.connect(**config())
+        cursor = con.cursor()
+        cursor.execute('''
+            INSERT INTO person(name,age,student) 
+            VALUES (%s, %s, %s);
+            ''', (nimi,ikä,student))
+        con.commit()
+        cursor.close()
+    except (Exception, psycopg2.DatabaseError) as error:
+        print(error)
+    finally:
+        if con is not None:
+            con.close()
+
 
 def update_person(iidee,name,age,student=False):
     con = None
@@ -201,4 +217,3 @@ def create_table():
         if con is not None:
             con.close()
 
-create_table()
