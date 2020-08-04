@@ -18,17 +18,19 @@ while True:
 
     if choice == "1":
 
+        certname = input("Please enter certificate name: ")
+        src.data.queries.get_person()
+        certid = input("Please enter certificate holder ID: ")
+
         try:
-            certname = input("Please enter certificate name: ")
-            src.data.queries.get_person()
-            certid = input("Please enter certificate holder ID: ")
-            # con = psycopg2.connect(**config())
-            # cursor = con.cursor
-            # cursor.execute("SELECT id FROM person WHERE %s IN id")
-            src.data.queries.insert_certificate_row(certname, certid)
-            print("Success!")
-            continue
-            
+            if src.data.queries.check_cert_userid(certid)[0] != 0:
+                src.data.queries.insert_certificate_row(certname, certid)
+                print("Success!")
+                continue
+
+            else:
+                raise Exception
+
         except:
             print("There was an error, returning to main menu")
             continue

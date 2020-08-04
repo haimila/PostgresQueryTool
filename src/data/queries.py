@@ -90,7 +90,7 @@ def aws_holders():
         if con is not None:
             con.close()
 
-def insert_certificate_row(nimi,personiidee):
+def insert_certificate_row(name,personid):
     con = None
     try:
         con = psycopg2.connect(**config())
@@ -98,10 +98,8 @@ def insert_certificate_row(nimi,personiidee):
         cursor.execute('''
             INSERT INTO certificates(name,person_id) 
             VALUES (%s, %s);
-            ''', (nimi,personiidee))
+            ''', (name,personid))
         con.commit()
-        # row = cursor.fetchall()
-        # print(row)
         cursor.close()
     except (Exception, psycopg2.DatabaseError) as error:
         print(error)
@@ -216,4 +214,25 @@ def create_table():
     finally:
         if con is not None:
             con.close()
+
+def check_cert_userid(userinput):
+    con = None
+    try:
+        con = psycopg2.connect(**config())
+        cursor = con.cursor()
+        cursor.execute("""
+        SELECT COUNT(id) FROM person WHERE id = %s ;
+        """, (userinput,))
+        row = cursor.fetchone()
+        cursor.close()
+        return row
+
+    except (Exception, psycopg2.DatabaseError) as error:
+        print(error)
+    finally:
+        if con is not None:
+            con.close()
+
+check = check_cert_userid(7)
+print(check[0])
 
