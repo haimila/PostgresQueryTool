@@ -1,4 +1,6 @@
 import src.data.queries
+import psycopg2
+from src.data.config import config
 
 while True:
 
@@ -20,13 +22,16 @@ while True:
             certname = input("Please enter certificate name: ")
             src.data.queries.get_person()
             certid = input("Please enter certificate holder ID: ")
-            src.data.queries.insert_certificate_row(certname,certid)
+            # con = psycopg2.connect(**config())
+            # cursor = con.cursor
+            # cursor.execute("SELECT id FROM person WHERE %s IN id")
+            src.data.queries.insert_certificate_row(certname, certid)
             print("Success!")
-
+            continue
+            
         except:
             print("There was an error, returning to main menu")
             continue
-
 
     elif choice == "2":
         pass
